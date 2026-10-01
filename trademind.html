@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#0a0a0f" />
+  <title>TradeMind AI</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface-2: #1c1c28;
+      --primary: #00d2ff;
+      --primary-dim: rgba(0, 210, 255, 0.15);
+      --green: #00e676;
+      --red: #ff3d57;
+      --orange: #ffab00;
+      --text: #f0f0f5;
+      --text-secondary: #8b8b9e;
+      --radius: 18px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 40px;
+      background-image:
+        radial-gradient(ellipse at top left, rgba(0, 210, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(0, 230, 118, 0.05) 0%, transparent 40%);
+    }
+
+    .header {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(10, 10, 15, 0.8);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #00d2ff, #00e676);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      color: #000;
+    }
+
+    .logo h1 {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--primary-dim);
+      color: var(--primary);
+      padding: 5px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    .content {
+      padding: 20px;
+      max-width: 460px;
+      margin: 0 auto;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 14px 12px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .stat-value.green { color: var(--green); }
+    .stat-value.red { color: var(--red); }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* AI Insight Card */
+    .insight-card {
+      background: linear-gradient(145deg, #15152a, #12121f);
+      border: 1px solid rgba(0, 210, 255, 0.2);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .insight-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, #00d2ff, #00e676);
+    }
+
+    .insight-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .insight-text {
+      font-size: 15px;
+      line-height: 1.5;
+      color: #e0e0ea;
+    }
+
+    /* Voice / Add Trade */
+    .action-section {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .mic-btn {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(145deg, #00d2ff, #0091ea);
+      color: #000;
+      font-size: 32px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      box-shadow: 0 8px 28px rgba(0, 210, 255, 0.35);
+      transition: all 0.25s ease;
+    }
+
+    .mic-btn.listening {
+      background: linear-gradient(145deg, #ff3d57, #e01e3a);
+      box-shadow: 0 8px 28px rgba(255, 61, 87, 0.45);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.07); }
+    }
+
+    .status {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .transcript {
+      font-size: 13px;
+      color: var(--text-secondary);
+      min-height: 18px;
+    }
+
+    /* Manual form */
+    .form-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 28px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 15px;
+      outline: none;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--primary);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00d2ff, #0091ea);
+      color: #000;
+    }
+
+    .btn-green {
+      background: rgba(0, 230, 118, 0.15);
+      color: var(--green);
+      border: 1px solid rgba(0, 230, 118, 0.3);
+    }
+
+    .btn-red {
+      background: rgba(255, 61, 87, 0.15);
+      color: var(--red);
+      border: 1px solid rgba(255, 61, 87, 0.3);
+    }
+
+    /* Trades list */
+    .trade-item {
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255,255,255,0.05);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .trade-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .trade-symbol {
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .trade-side {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 8px;
+    }
+
+    .trade-side.long {
+      background: rgba(0, 230, 118, 0.15);
+      color: var(--green);
+    }
+
+    .trade-side.short {
+      background: rgba(255, 61, 87, 0.15);
+      color: var(--red);
+    }
+
+    .trade-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .trade-pnl {
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .trade-pnl.positive { color: var(--green); }
+    .trade-pnl.negative { color: var(--red); }
+
+    .empty {
+      text-align: center;
+      padding: 36px 20px;
+      color: var(--text-secondary);
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px dashed rgba(255,255,255,0.1);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: #1c1c28;
+      color: white;
+      padding: 14px 26px;
+      border-radius: 40px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.35s ease;
+      z-index: 1000;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">TM</div>
+      <h1>TradeMind</h1>
+    </div>
+    <span class="badge">AI COACH</span>
+  </div>
+
+  <div class="content">
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Winrate</div>
+        <div class="stat-value" id="winrate">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">PnL dziś</div>
+        <div class="stat-value" id="todayPnl">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Transakcje</div>
+        <div class="stat-value" id="tradeCount">0</div>
+      </div>
+    </div>
+
+    <!-- AI Insight -->
+    <div class="section-title">AI Insight</div>
+    <div class="insight-card">
+      <div class="insight-header">✨ TradeMind AI</div>
+      <div class="insight-text" id="aiInsight">
+        Dodaj swoją pierwszą transakcję, a ja zacznę analizować Twoje wyniki i wskazywać obszary do poprawy.
+      </div>
+    </div>
+
+    <!-- Voice -->
+    <div class="action-section">
+      <button class="mic-btn" id="micBtn" onclick="toggleListening()">🎤</button>
+      <div class="status" id="status">Powiedz transakcję głosem</div>
+      <div class="transcript" id="transcript"></div>
+    </div>
+
+    <!-- Manual Form -->
+    <div class="form-card">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Instrument</label>
+          <input type="text" id="symbol" placeholder="np. EURUSD" />
+        </div>
+        <div class="form-group">
+          <label>Kierunek</label>
+          <select id="side">
+            <option value="long">Long</option>
+            <option value="short">Short</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Wejście</label>
+          <input type="number" id="entry" step="any" placeholder="0.00" />
+        </div>
+        <div class="form-group">
+          <label>Wyjście</label>
+          <input type="number" id="exit" step="any" placeholder="0.00" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>PnL (opcjonalnie)</label>
+        <input type="number" id="pnl" step="any" placeholder="np. 45 lub -20" />
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="addTrade()">Dodaj transakcję</button>
+      </div>
+    </div>
+
+    <!-- Trades -->
+    <div class="section-title">Ostatnie transakcje</div>
+    <div id="tradesList">
+      <div class="empty">Brak transakcji.<br>Dodaj pierwszą ręcznie lub głosem.</div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <footer>TradeMind AI • Demo • Nie stanowi porady inwestycyjnej</footer>
+
+  <script>
+    let trades = JSON.parse(localStorage.getItem('trademind_trades') || '[]');
+
+    function save() {
+      localStorage.setItem('trademind_trades', JSON.stringify(trades));
+      render();
+    }
+
+    function calcStats() {
+      if (trades.length === 0) {
+        return { winrate: '—', todayPnl: 0, count: 0 };
+      }
+
+      const wins = trades.filter(t => t.pnl > 0).length;
+      const winrate = Math.round((wins / trades.length) * 100) + '%';
+
+      const today = new Date().toDateString();
+      const todayPnl = trades
+        .filter(t => new Date(t.date).toDateString() === today)
+        .reduce((sum, t) => sum + (t.pnl || 0), 0);
+
+      return { winrate, todayPnl, count: trades.length };
+    }
+
+    function generateInsight() {
+      if (trades.length === 0) {
+        return 'Dodaj swoją pierwszą transakcję, a ja zacznę analizować Twoje wyniki i wskazywać obszary do poprawy.';
+      }
+
+      const wins = trades.filter(t => t.pnl > 0).length;
+      const losses = trades.length - wins;
+      const totalPnl = trades.reduce((s, t) => s + (t.pnl || 0), 0);
+      const avgWin = wins ? trades.filter(t => t.pnl > 0).reduce((s, t) => s + t.pnl, 0) / wins : 0;
+      const avgLoss = losses ? Math.abs(trades.filter(t => t.pnl < 0).reduce((s, t) => s + t.pnl, 0) / losses) : 0;
+
+      if (trades.length < 3) {
+        return `Masz już ${trades.length} transakcje. Kontynuuj logowanie – im więcej danych, tym lepsze wnioski.`;
+      }
+
+      let insight = '';
+
+      if (wins / trades.length >= 0.6) {
+        insight = `Twój winrate wynosi ${Math.round((wins/trades.length)*100)}%. Dobrze! `; 
+      } else {
+        insight = `Winrate na poziomie ${Math.round((wins/trades.length)*100)}%. Warto przeanalizować setupy, które tracą. `;
+      }
+
+      if (avgWin > 0 && avgLoss > 0) {
+        const rr = (avgWin / avgLoss).toFixed(2);
+        insight += `Średni R:R to 1:${rr}. `;
+        if (rr < 1) insight += 'Staraj się trzymać lepsze risk/reward.';
+        else insight += 'Dobry stosunek zysku do ryzyka.';
+      }
+
+      if (totalPnl > 0) insight += ` Łączny wynik jest na plusie.`;
+      else if (totalPnl < 0) insight += ` Aktualnie jesteś na minusie – skup się na jakości setupów.`;
+
+      return insight;
+    }
+
+    function render() {
+      const stats = calcStats();
+      document.getElementById('winrate').textContent = stats.winrate;
+      document.getElementById('tradeCount').textContent = stats.count;
+
+      const pnlEl = document.getElementById('todayPnl');
+      pnlEl.textContent = (stats.todayPnl >= 0 ? '+' : '') + stats.todayPnl.toFixed(0);
+      pnlEl.className = 'stat-value ' + (stats.todayPnl >= 0 ? 'green' : 'red');
+
+      document.getElementById('aiInsight').textContent = generateInsight();
+
+      const list = document.getElementById('tradesList');
+      if (trades.length === 0) {
+        list.innerHTML = '<div class="empty">Brak transakcji.<br>Dodaj pierwszą ręcznie lub głosem.</div>';
+        return;
+      }
+
+      list.innerHTML = trades.slice().reverse().slice(0, 15).map(t => `
+        <div class="trade-item">
+          <div class="trade-top">
+            <div class="trade-symbol">${escapeHtml(t.symbol)}</div>
+            <div class="trade-side ${t.side}">${t.side.toUpperCase()}</div>
+          </div>
+          <div class="trade-meta">
+            <span>${formatDate(t.date)}</span>
+            <span class="trade-pnl ${t.pnl >= 0 ? 'positive' : 'negative'}">
+              ${t.pnl >= 0 ? '+' : ''}${t.pnl.toFixed(2)}
+            </span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function formatDate(iso) {
+      return new Date(iso).toLocaleString('pl-PL', {
+        day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+      });
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    function addTrade() {
+      const symbol = document.getElementById('symbol').value.trim().toUpperCase() || 'UNKNOWN';
+      const side = document.getElementById('side').value;
+      const entry = parseFloat(document.getElementById('entry').value) || 0;
+      const exit = parseFloat(document.getElementById('exit').value) || 0;
+      let pnl = parseFloat(document.getElementById('pnl').value);
+
+      if (isNaN(pnl)) {
+        // proste wyliczenie jeśli nie podano
+        if (entry && exit) {
+          pnl = side === 'long' ? (exit - entry) * 10 : (entry - exit) * 10;
+        } else {
+          pnl = 0;
+        }
+      }
+
+      trades.push({
+        id: Date.now(),
+        symbol,
+        side,
+        entry,
+        exit,
+        pnl,
+        date: new Date().toISOString()
+      });
+
+      save();
+      showToast('Transakcja dodana');
+
+      // clear
+      document.getElementById('symbol').value = '';
+      document.getElementById('entry').value = '';
+      document.getElementById('exit').value = '';
+      document.getElementById('pnl').value = '';
+    }
+
+    // Voice
+    let recognition = null;
+    let isListening = false;
+
+    function initSpeech() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        document.getElementById('status').textContent = 'Mikrofon niedostępny';
+        return false;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.lang = 'pl-PL';
+      recognition.continuous = false;
+      recognition.interimResults = true;
+
+      recognition.onstart = () => {
+        isListening = true;
+        document.getElementById('micBtn').classList.add('listening');
+        document.getElementById('status').textContent = 'Słucham...';
+      };
+
+      recognition.onresult = (event) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        document.getElementById('transcript').textContent = transcript;
+
+        if (event.results[event.results.length - 1].isFinal) {
+          parseVoiceTrade(transcript);
+        }
+      };
+
+      recognition.onerror = () => {
+        stopListening();
+        document.getElementById('status').textContent = 'Spróbuj ponownie';
+      };
+
+      recognition.onend = () => stopListening();
+      return true;
+    }
+
+    function parseVoiceTrade(text) {
+      const lower = text.toLowerCase();
+      let side = lower.includes('short') || lower.includes('sprzeda') || lower.includes('shorta') ? 'short' : 'long';
+
+      // proste wyciąganie symbolu i pnl
+      const symbols = ['eurusd', 'gbpusd', 'usdjpy', 'xauusd', 'gold', 'btc', 'eth', 'nasdaq', 'spx'];
+      let symbol = 'MANUAL';
+      for (const s of symbols) {
+        if (lower.includes(s)) {
+          symbol = s.toUpperCase();
+          break;
+        }
+      }
+
+      const pnlMatch = lower.match(/([+-]?\d+[.,]?\d*)\s*(dolar|usd|zł|pip|pips)?/);
+      let pnl = 0;
+      if (pnlMatch) {
+        pnl = parseFloat(pnlMatch[1].replace(',', '.'));
+        if (lower.includes('straci') || lower.includes('minus') || lower.includes('strat')) pnl = -Math.abs(pnl);
+      }
+
+      trades.push({
+        id: Date.now(),
+        symbol,
+        side,
+        entry: 0,
+        exit: 0,
+        pnl,
+        date: new Date().toISOString(),
+        note: text
+      });
+
+      save();
+      showToast('Transakcja z głosu dodana');
+    }
+
+    function toggleListening() {
+      if (!recognition && !initSpeech()) return;
+
+      if (isListening) {
+        recognition.stop();
+      } else {
+        document.getElementById('transcript').textContent = '';
+        try { recognition.start(); } catch(e) {}
+      }
+    }
+
+    function stopListening() {
+      isListening = false;
+      document.getElementById('micBtn').classList.remove('listening');
+      document.getElementById('status').textContent = 'Powiedz transakcję głosem';
+    }
+
+    initSpeech();
+    render();
+  </script>
+</body>
+</html>
