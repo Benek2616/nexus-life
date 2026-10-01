@@ -1,867 +1,495 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="theme-color" content="#07070c" />
-  <title>TradeMind AI</title>
-  <style>
-    :root {
-      --bg: #07070c;
-      --surface: #111118;
-      --surface-2: #1a1a24;
-      --primary: #00f0ff;
-      --primary-glow: rgba(0, 240, 255, 0.25);
-      --green: #00ff9d;
-      --red: #ff4d6d;
-      --purple: #a855f7;
-      --orange: #ffb020;
-      --text: #f4f4f8;
-      --text-dim: #9494a8;
-      --radius: 20px;
-    }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#05050a"/>
+<title>TradeMind AI</title>
+<style>
+:root{--bg:#05050a;--s1:#0e0e16;--s2:#161622;--s3:#1e1e2e;--cyan:#00f0ff;--green:#00ff9d;--red:#ff4d6d;--purple:#c084fc;--orange:#ffb020;--text:#f1f1f6;--dim:#8b8b9f;--r:18px}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;background-image:radial-gradient(ellipse 90% 60% at 10% -20%,rgba(0,240,255,.1),transparent),radial-gradient(ellipse 70% 50% at 100% 110%,rgba(192,132,252,.08),transparent)}
 
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* HEADER */
+.header{position:sticky;top:0;z-index:40;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,5,10,.88);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.04)}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-m{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#00f0ff,#c084fc);display:grid;place-items:center;font-weight:900;font-size:13px;color:#000;box-shadow:0 4px 18px rgba(0,240,255,.3)}
+.logo-t{font-size:17px;font-weight:800;letter-spacing:-.3px}.logo-t b{background:linear-gradient(90deg,#00f0ff,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.lvl{font-size:11px;font-weight:700;background:rgba(0,240,255,.12);color:var(--cyan);padding:4px 10px;border-radius:20px}
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      background-image:
-        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(0, 240, 255, 0.12), transparent),
-        radial-gradient(ellipse 60% 40% at 90% 100%, rgba(168, 85, 247, 0.1), transparent);
-    }
+/* TABS */
+.tabs{display:flex;gap:6px;padding:12px 16px 0;max-width:480px;margin:0 auto}
+.tab{flex:1;padding:11px;text-align:center;font-size:13px;font-weight:700;border-radius:14px;background:var(--s1);color:var(--dim);border:1px solid transparent;cursor:pointer;transition:.2s}
+.tab.active{background:rgba(0,240,255,.1);color:var(--cyan);border-color:rgba(0,240,255,.25)}
 
-    /* Header */
-    .header {
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(7, 7, 12, 0.85);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-    }
+/* CONTENT */
+.page{display:none;padding:16px;max-width:480px;margin:0 auto;padding-bottom:90px}
+.page.active{display:block}
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-    }
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.stat{background:var(--s1);border-radius:14px;padding:12px 6px;text-align:center;border:1px solid rgba(255,255,255,.04)}
+.stat-l{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.stat-v{font-size:16px;font-weight:800}.stat-v.g{color:var(--green)}.stat-v.r{color:var(--red)}.stat-v.c{color:var(--cyan)}
 
-    .logo-mark {
-      width: 40px;
-      height: 40px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #00f0ff, #a855f7);
-      display: grid;
-      place-items: center;
-      font-weight: 900;
-      font-size: 15px;
-      color: #000;
-      box-shadow: 0 4px 20px var(--primary-glow);
-    }
+/* AI CARD */
+.ai{background:linear-gradient(165deg,#0c1420,#12101c);border:1px solid rgba(0,240,255,.2);border-radius:20px;padding:18px;margin-bottom:18px;position:relative;overflow:hidden;box-shadow:0 0 50px rgba(0,240,255,.05)}
+.ai::before{content:'';position:absolute;top:-40%;right:-20%;width:180px;height:180px;background:radial-gradient(circle,rgba(192,132,252,.12),transparent 70%);pointer-events:none}
+.ai-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.ai-lab{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--cyan)}
+.ai-ico{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#00f0ff,#c084fc);display:grid;place-items:center;font-size:12px;color:#000}
+.ai-score{font-size:12px;font-weight:800;background:rgba(0,240,255,.12);color:var(--cyan);padding:4px 11px;border-radius:20px}
+.ai-main{font-size:14.5px;line-height:1.55;color:#e0e0ec;margin-bottom:12px}
+.ai-tips{display:flex;flex-direction:column;gap:7px}
+.tip{display:flex;gap:9px;background:rgba(255,255,255,.03);padding:10px 12px;border-radius:12px;font-size:12.5px;line-height:1.4;color:#c4c4d4}
+.tip i{font-style:normal;flex-shrink:0}
 
-    .logo-text {
-      font-size: 19px;
-      font-weight: 800;
-      letter-spacing: -0.4px;
-    }
+/* EQUITY */
+.chart-box{background:var(--s1);border-radius:18px;padding:14px;margin-bottom:18px;border:1px solid rgba(255,255,255,.04)}
+.chart-title{font-size:12px;font-weight:700;color:var(--dim);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+canvas{width:100%;height:120px;display:block}
 
-    .logo-text span {
-      background: linear-gradient(90deg, #00f0ff, #a855f7);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+/* STREAK */
+.streak{display:flex;gap:10px;margin-bottom:18px}
+.streak-c{flex:1;background:var(--s1);border-radius:14px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,.04)}
+.streak-n{font-size:22px;font-weight:800}.streak-l{font-size:11px;color:var(--dim);margin-top:2px}
 
-    .live-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--green);
-      background: rgba(0, 255, 157, 0.1);
-      padding: 5px 11px;
-      border-radius: 20px;
-    }
+/* FORM */
+.form{background:var(--s1);border-radius:18px;padding:16px;margin-bottom:18px;border:1px solid rgba(255,255,255,.04)}
+.form-t{font-size:13px;font-weight:700;color:var(--dim);margin-bottom:12px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}
+.f label{display:block;font-size:10px;color:var(--dim);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.f input,.f select{width:100%;padding:11px 12px;background:var(--s2);border:1px solid rgba(255,255,255,.06);border-radius:11px;color:var(--text);font-size:14px;outline:none}
+.f input:focus,.f select:focus{border-color:var(--cyan)}
+.emotions{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.emo{padding:7px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--s2);color:var(--dim);border:1px solid transparent;cursor:pointer}
+.emo.on{background:rgba(0,240,255,.12);color:var(--cyan);border-color:rgba(0,240,255,.3)}
+.btn{width:100%;padding:14px;border:none;border-radius:13px;background:linear-gradient(135deg,#00f0ff,#00b8d4);color:#000;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 6px 22px rgba(0,240,255,.25)}
+.btn:active{transform:scale(.97)}
 
-    .live-dot {
-      width: 7px;
-      height: 7px;
-      background: var(--green);
-      border-radius: 50%;
-      animation: blink 1.4s infinite;
-    }
+/* VOICE */
+.voice{text-align:center;margin-bottom:18px}
+.mic{width:78px;height:78px;border-radius:50%;border:none;background:linear-gradient(145deg,#00f0ff,#00b8d4);color:#000;font-size:28px;cursor:pointer;box-shadow:0 6px 26px rgba(0,240,255,.3);margin-bottom:8px}
+.mic.rec{background:linear-gradient(145deg,#ff4d6d,#e11d48);animation:p 1.3s infinite}
+@keyframes p{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.v-st{font-size:13px;font-weight:600}.v-tr{font-size:12px;color:var(--dim);min-height:16px;margin-top:4px}
 
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
+/* TRADE LIST */
+.th{font-size:12px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.tc{background:var(--s1);border-radius:14px;padding:13px 14px;margin-bottom:8px;border:1px solid rgba(255,255,255,.03);animation:up .3s ease}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.tt{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.ts{font-weight:800;font-size:15px}
+.tg{font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;letter-spacing:.4px}
+.tg.L{background:rgba(0,255,157,.12);color:var(--green)}.tg.S{background:rgba(255,77,109,.12);color:var(--red)}
+.tb{display:flex;justify-content:space-between;font-size:12px;color:var(--dim)}
+.pnl{font-weight:800;font-size:14px}.pnl.g{color:var(--green)}.pnl.r{color:var(--red)}
+.emo-tag{display:inline-block;font-size:11px;margin-left:6px;opacity:.8}
 
-    .content {
-      padding: 18px 16px 50px;
-      max-width: 460px;
-      margin: 0 auto;
-    }
+/* CHECKLIST */
+.check-btn{width:100%;padding:13px;border-radius:13px;border:1px dashed rgba(0,240,255,.3);background:rgba(0,240,255,.05);color:var(--cyan);font-weight:700;font-size:13px;cursor:pointer;margin-bottom:16px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:flex-end;justify-content:center}
+.modal.on{display:flex}
+.modal-box{background:var(--s1);border-radius:22px 22px 0 0;padding:22px 18px 40px;width:100%;max-width:480px;animation:slide .3s ease}
+@keyframes slide{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-t{font-size:17px;font-weight:800;margin-bottom:16px}
+.ci{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:14px}
+.ci input{width:20px;height:20px;accent-color:var(--cyan)}
+.modal-close{width:100%;margin-top:16px;padding:13px;border:none;border-radius:13px;background:var(--s2);color:var(--text);font-weight:700;cursor:pointer}
 
-    /* Hero Stats */
-    .hero-stats {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 22px;
-    }
+/* EMPTY */
+.empty{text-align:center;padding:36px 16px;background:var(--s1);border-radius:18px;border:1px dashed rgba(255,255,255,.07);color:var(--dim);font-size:13px;line-height:1.6}
 
-    .hero-card {
-      background: var(--surface);
-      border-radius: 18px;
-      padding: 16px 12px;
-      border: 1px solid rgba(255,255,255,0.05);
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(150%);background:#1a1a28;color:#fff;padding:12px 22px;border-radius:40px;font-size:13px;font-weight:600;opacity:0;transition:.35s;z-index:200;border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 30px rgba(0,0,0,.5);white-space:nowrap}
+.toast.on{transform:translateX(-50%) translateY(0);opacity:1}
 
-    .hero-card.main {
-      background: linear-gradient(160deg, #0f1a24, #111118);
-      border-color: rgba(0, 240, 255, 0.15);
-    }
-
-    .hero-label {
-      font-size: 11px;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      margin-bottom: 6px;
-    }
-
-    .hero-value {
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-
-    .hero-value.green { color: var(--green); }
-    .hero-value.red { color: var(--red); }
-    .hero-value.cyan { color: var(--primary); }
-
-    /* AI Card - the star */
-    .ai-card {
-      background: linear-gradient(165deg, #0e1520 0%, #12101c 100%);
-      border: 1px solid rgba(0, 240, 255, 0.18);
-      border-radius: 22px;
-      padding: 20px;
-      margin-bottom: 26px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 0 40px rgba(0, 240, 255, 0.06);
-    }
-
-    .ai-card::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -30%;
-      width: 200px;
-      height: 200px;
-      background: radial-gradient(circle, rgba(168, 85, 247, 0.12), transparent 70%);
-      pointer-events: none;
-    }
-
-    .ai-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-
-    .ai-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--primary);
-    }
-
-    .ai-title-icon {
-      width: 28px;
-      height: 28px;
-      background: linear-gradient(135deg, #00f0ff, #a855f7);
-      border-radius: 9px;
-      display: grid;
-      place-items: center;
-      font-size: 14px;
-    }
-
-    .ai-score {
-      font-size: 12px;
-      font-weight: 700;
-      background: rgba(0, 240, 255, 0.12);
-      color: var(--primary);
-      padding: 4px 10px;
-      border-radius: 20px;
-    }
-
-    .ai-body {
-      font-size: 15px;
-      line-height: 1.55;
-      color: #e2e2ec;
-      margin-bottom: 14px;
-    }
-
-    .ai-tips {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .ai-tip {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      background: rgba(255,255,255,0.03);
-      padding: 11px 13px;
-      border-radius: 12px;
-      font-size: 13px;
-      line-height: 1.4;
-      color: #c8c8d8;
-    }
-
-    .ai-tip-icon {
-      flex-shrink: 0;
-      font-size: 16px;
-    }
-
-    /* Voice */
-    .voice-zone {
-      text-align: center;
-      margin-bottom: 28px;
-    }
-
-    .mic-wrap {
-      position: relative;
-      width: 96px;
-      height: 96px;
-      margin: 0 auto 14px;
-    }
-
-    .mic-ring {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      border: 2px solid transparent;
-      background: linear-gradient(var(--bg), var(--bg)) padding-box,
-                  linear-gradient(135deg, #00f0ff, #a855f7) border-box;
-      opacity: 0.5;
-    }
-
-    .mic-btn {
-      position: absolute;
-      inset: 7px;
-      border-radius: 50%;
-      border: none;
-      background: linear-gradient(145deg, #00f0ff, #00b8d4);
-      color: #000;
-      font-size: 34px;
-      cursor: pointer;
-      display: grid;
-      place-items: center;
-      box-shadow: 0 8px 32px var(--primary-glow);
-      transition: all 0.25s ease;
-    }
-
-    .mic-btn.listening {
-      background: linear-gradient(145deg, #ff4d6d, #e11d48);
-      box-shadow: 0 8px 32px rgba(255, 77, 109, 0.4);
-      animation: micPulse 1.4s ease-in-out infinite;
-    }
-
-    @keyframes micPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.08); }
-    }
-
-    .voice-status {
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .voice-transcript {
-      font-size: 13px;
-      color: var(--text-dim);
-      margin-top: 6px;
-      min-height: 18px;
-    }
-
-    /* Quick add form */
-    .quick-form {
-      background: var(--surface);
-      border-radius: 20px;
-      padding: 18px;
-      margin-bottom: 26px;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .form-title {
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 14px;
-      color: var(--text-dim);
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .field label {
-      display: block;
-      font-size: 11px;
-      color: var(--text-dim);
-      margin-bottom: 5px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-    }
-
-    .field input, .field select {
-      width: 100%;
-      padding: 12px 13px;
-      background: var(--surface-2);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 12px;
-      color: var(--text);
-      font-size: 15px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .field input:focus, .field select:focus {
-      border-color: var(--primary);
-    }
-
-    .add-btn {
-      width: 100%;
-      padding: 15px;
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #00f0ff, #00b8d4);
-      color: #000;
-      font-weight: 800;
-      font-size: 15px;
-      cursor: pointer;
-      margin-top: 6px;
-      box-shadow: 0 6px 24px var(--primary-glow);
-      transition: transform 0.15s;
-    }
-
-    .add-btn:active { transform: scale(0.97); }
-
-    /* Trades */
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .section-head h3 {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-    }
-
-    .trade-card {
-      background: var(--surface);
-      border-radius: 16px;
-      padding: 15px 16px;
-      margin-bottom: 10px;
-      border: 1px solid rgba(255,255,255,0.04);
-      animation: slideUp 0.35s ease;
-    }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .trade-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .trade-symbol {
-      font-size: 16px;
-      font-weight: 800;
-    }
-
-    .side-tag {
-      font-size: 11px;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 8px;
-      letter-spacing: 0.5px;
-    }
-
-    .side-tag.long {
-      background: rgba(0, 255, 157, 0.12);
-      color: var(--green);
-    }
-
-    .side-tag.short {
-      background: rgba(255, 77, 109, 0.12);
-      color: var(--red);
-    }
-
-    .trade-bottom {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      color: var(--text-dim);
-    }
-
-    .pnl {
-      font-weight: 800;
-      font-size: 15px;
-    }
-
-    .pnl.pos { color: var(--green); }
-    .pnl.neg { color: var(--red); }
-
-    .empty-state {
-      text-align: center;
-      padding: 40px 20px;
-      background: var(--surface);
-      border-radius: 20px;
-      border: 1px dashed rgba(255,255,255,0.08);
-      color: var(--text-dim);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%) translateY(140%);
-      background: #1a1a28;
-      color: white;
-      padding: 13px 24px;
-      border-radius: 40px;
-      font-size: 14px;
-      font-weight: 600;
-      opacity: 0;
-      transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
-      z-index: 200;
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-      white-space: nowrap;
-    }
-
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-
-    footer {
-      text-align: center;
-      padding: 16px;
-      font-size: 11px;
-      color: var(--text-dim);
-      opacity: 0.55;
-    }
-  </style>
+footer{text-align:center;padding:12px;font-size:10px;color:var(--dim);opacity:.5}
+</style>
 </head>
 <body>
-  <div class="header">
-    <div class="logo">
-      <div class="logo-mark">TM</div>
-      <div class="logo-text">Trade<span>Mind</span></div>
-    </div>
-    <div class="live-badge">
-      <div class="live-dot"></div>
-      AI LIVE
-    </div>
+<div class="header">
+  <div class="logo"><div class="logo-m">TM</div><div class="logo-t">Trade<b>Mind</b></div></div>
+  <div class="lvl" id="level">Lvl 1</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showPage('dash')">Dashboard</div>
+  <div class="tab" onclick="showPage('journal')">Dziennik</div>
+  <div class="tab" onclick="showPage('analytics')">Analityka</div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="page active" id="dash">
+  <div class="stats">
+    <div class="stat"><div class="stat-l">Winrate</div><div class="stat-v c" id="wr">—</div></div>
+    <div class="stat"><div class="stat-l">PnL</div><div class="stat-v" id="pnl">0</div></div>
+    <div class="stat"><div class="stat-l">Trade'y</div><div class="stat-v" id="cnt">0</div></div>
+    <div class="stat"><div class="stat-l">R:R</div><div class="stat-v c" id="rr">—</div></div>
   </div>
 
-  <div class="content">
-    <!-- Stats -->
-    <div class="hero-stats">
-      <div class="hero-card main">
-        <div class="hero-label">Winrate</div>
-        <div class="hero-value cyan" id="winrate">—</div>
-      </div>
-      <div class="hero-card">
-        <div class="hero-label">PnL</div>
-        <div class="hero-value" id="totalPnl">0</div>
-      </div>
-      <div class="hero-card">
-        <div class="hero-label">Trade'y</div>
-        <div class="hero-value" id="tradeCount">0</div>
-      </div>
+  <div class="ai">
+    <div class="ai-top">
+      <div class="ai-lab"><div class="ai-ico">✦</div> AI Coach</div>
+      <div class="ai-score" id="score">—</div>
     </div>
-
-    <!-- AI Analysis Card -->
-    <div class="ai-card">
-      <div class="ai-header">
-        <div class="ai-title">
-          <div class="ai-title-icon">✦</div>
-          AI Coach
-        </div>
-        <div class="ai-score" id="aiScore">Analiza</div>
-      </div>
-      <div class="ai-body" id="aiMain">
-        Dodaj minimum 3 transakcje, a AI zacznie generować pełną analizę Twojego tradingu.
-      </div>
-      <div class="ai-tips" id="aiTips"></div>
-    </div>
-
-    <!-- Voice -->
-    <div class="voice-zone">
-      <div class="mic-wrap">
-        <div class="mic-ring"></div>
-        <button class="mic-btn" id="micBtn" onclick="toggleListening()">🎤</button>
-      </div>
-      <div class="voice-status" id="status">Powiedz wynik transakcji</div>
-      <div class="voice-transcript" id="transcript"></div>
-    </div>
-
-    <!-- Form -->
-    <div class="quick-form">
-      <div class="form-title">Szybkie dodanie</div>
-      <div class="form-grid">
-        <div class="field">
-          <label>Instrument</label>
-          <input type="text" id="symbol" placeholder="EURUSD" />
-        </div>
-        <div class="field">
-          <label>Kierunek</label>
-          <select id="side">
-            <option value="long">LONG</option>
-            <option value="short">SHORT</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>PnL</label>
-          <input type="number" id="pnl" step="any" placeholder="+45 lub -20" />
-        </div>
-        <div class="field">
-          <label>Setup (opcjonalnie)</label>
-          <input type="text" id="setup" placeholder="np. breakout" />
-        </div>
-      </div>
-      <button class="add-btn" onclick="addTrade()">Dodaj transakcję</button>
-    </div>
-
-    <!-- List -->
-    <div class="section-head">
-      <h3>Historia</h3>
-    </div>
-    <div id="tradesList">
-      <div class="empty-state">Brak transakcji.<br>Dodaj pierwszą i zobacz moc AI.</div>
-    </div>
+    <div class="ai-main" id="aiMain">Dodaj 3+ transakcje, żeby odblokować pełną analizę AI.</div>
+    <div class="ai-tips" id="aiTips"></div>
   </div>
 
-  <div class="toast" id="toast"></div>
-  <footer>TradeMind AI • Demo • Nie jest poradą inwestycyjną</footer>
+  <div class="chart-box">
+    <div class="chart-title">Krzywa kapitału</div>
+    <canvas id="equity" height="120"></canvas>
+  </div>
 
-  <script>
-    let trades = JSON.parse(localStorage.getItem('tm_trades_v2') || '[]');
+  <div class="streak">
+    <div class="streak-c"><div class="streak-n" id="streakN">0</div><div class="streak-l">Seria</div></div>
+    <div class="streak-c"><div class="streak-n" id="bestW">0</div><div class="streak-l">Najlepszy trade</div></div>
+    <div class="streak-c"><div class="streak-n" id="avg">0</div><div class="streak-l">Śr. PnL</div></div>
+  </div>
 
-    function save() {
-      localStorage.setItem('tm_trades_v2', JSON.stringify(trades));
-      render();
-    }
+  <button class="check-btn" onclick="openCheck()">✓ Checklist przed wejściem</button>
 
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2400);
-    }
+  <div class="voice">
+    <button class="mic" id="mic" onclick="toggleMic()">🎤</button>
+    <div class="v-st" id="vSt">Powiedz wynik transakcji</div>
+    <div class="v-tr" id="vTr"></div>
+  </div>
+</div>
 
-    function formatDate(iso) {
-      return new Date(iso).toLocaleString('pl-PL', {
-        day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
-      });
-    }
+<!-- JOURNAL -->
+<div class="page" id="journal">
+  <div class="form">
+    <div class="form-t">Nowa transakcja</div>
+    <div class="fg">
+      <div class="f"><label>Instrument</label><input id="sym" placeholder="EURUSD"/></div>
+      <div class="f"><label>Kierunek</label><select id="side"><option value="long">LONG</option><option value="short">SHORT</option></select></div>
+      <div class="f"><label>PnL</label><input id="pnlin" type="number" step="any" placeholder="+45 / -20"/></div>
+      <div class="f"><label>Setup</label><input id="setup" placeholder="breakout, FVG..."/></div>
+    </div>
+    <div style="margin-bottom:6px;font-size:10px;color:var(--dim);font-weight:700;text-transform:uppercase">Emocja</div>
+    <div class="emotions" id="emos">
+      <div class="emo" data-e="spokój">😌 Spokój</div>
+      <div class="emo" data-e="FOMO">😰 FOMO</div>
+      <div class="emo" data-e="euforia">🤩 Euforia</div>
+      <div class="emo" data-e="zemsta">😡 Zemsta</div>
+      <div class="emo" data-e="niepewność">🤔 Niepewność</div>
+    </div>
+    <button class="btn" onclick="addTrade()">Dodaj transakcję</button>
+  </div>
 
-    function escapeHtml(str) {
-      const d = document.createElement('div');
-      d.textContent = str;
-      return d.innerHTML;
-    }
+  <div class="th">Historia</div>
+  <div id="list"><div class="empty">Brak transakcji.<br>Dodaj pierwszą w formularzu powyżej.</div></div>
+</div>
 
-    // ========== SMART AI ANALYSIS ==========
-    function runAIAnalysis() {
-      const n = trades.length;
-      const mainEl = document.getElementById('aiMain');
-      const tipsEl = document.getElementById('aiTips');
-      const scoreEl = document.getElementById('aiScore');
+<!-- ANALYTICS -->
+<div class="page" id="analytics">
+  <div class="ai" style="margin-bottom:16px">
+    <div class="ai-top">
+      <div class="ai-lab"><div class="ai-ico">📊</div> Głęboka analiza</div>
+    </div>
+    <div class="ai-main" id="deepAI">Potrzebujesz więcej danych, żeby zobaczyć szczegółową analitykę.</div>
+  </div>
 
-      if (n === 0) {
-        mainEl.textContent = 'Dodaj minimum 3 transakcje, a AI zacznie generować pełną analizę Twojego tradingu.';
-        tipsEl.innerHTML = '';
-        scoreEl.textContent = 'Czekam';
-        return;
-      }
+  <div class="stats" style="grid-template-columns:1fr 1fr">
+    <div class="stat"><div class="stat-l">Long WR</div><div class="stat-v g" id="lwr">—</div></div>
+    <div class="stat"><div class="stat-l">Short WR</div><div class="stat-v r" id="swr">—</div></div>
+    <div class="stat"><div class="stat-l">Śr. zysk</div><div class="stat-v g" id="aw">—</div></div>
+    <div class="stat"><div class="stat-l">Śr. strata</div><div class="stat-v r" id="al">—</div></div>
+  </div>
 
-      if (n < 3) {
-        mainEl.textContent = `Masz już ${n} transakcje. Dodaj jeszcze ${3 - n}, żeby odblokować pełną analizę AI.`;
-        tipsEl.innerHTML = '';
-        scoreEl.textContent = 'Zbieram dane';
-        return;
-      }
+  <div class="chart-box">
+    <div class="chart-title">Winrate w czasie</div>
+    <canvas id="wrChart" height="100"></canvas>
+  </div>
 
-      // Calculations
-      const wins = trades.filter(t => t.pnl > 0);
-      const losses = trades.filter(t => t.pnl < 0);
-      const winrate = Math.round((wins.length / n) * 100);
-      const totalPnl = trades.reduce((s, t) => s + t.pnl, 0);
-      const avgWin = wins.length ? wins.reduce((s, t) => s + t.pnl, 0) / wins.length : 0;
-      const avgLoss = losses.length ? Math.abs(losses.reduce((s, t) => s + t.pnl, 0) / losses.length) : 0;
-      const rr = avgLoss > 0 ? (avgWin / avgLoss) : 0;
+  <div class="th" style="margin-top:8px">Najczęstsze emocje</div>
+  <div id="emoStats" class="empty" style="padding:20px">Za mało danych</div>
+</div>
 
-      // Long vs Short performance
-      const longs = trades.filter(t => t.side === 'long');
-      const shorts = trades.filter(t => t.side === 'short');
-      const longWinrate = longs.length ? Math.round((longs.filter(t => t.pnl > 0).length / longs.length) * 100) : 0;
-      const shortWinrate = shorts.length ? Math.round((shorts.filter(t => t.pnl > 0).length / shorts.length) * 100) : 0;
+<!-- CHECKLIST MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="modal-t">Checklist przed wejściem</div>
+    <div class="ci"><input type="checkbox" id="c1"/><label for="c1">Czy setup jest zgodny z moim planem?</label></div>
+    <div class="ci"><input type="checkbox" id="c2"/><label for="c2">Czy określiłem SL i TP?</label></div>
+    <div class="ci"><input type="checkbox" id="c3"/><label for="c3">Czy risk ≤ 1% konta?</label></div>
+    <div class="ci"><input type="checkbox" id="c4"/><label for="c4">Czy nie wchodzę z FOMO / zemsty?</label></div>
+    <div class="ci"><input type="checkbox" id="c5"/><label for="c5">Czy rynek ma wystarczającą płynność?</label></div>
+    <button class="modal-close" onclick="closeCheck()">Zamknij</button>
+  </div>
+</div>
 
-      // Streak detection
-      let currentStreak = 0;
-      let streakType = null;
-      for (let i = trades.length - 1; i >= 0; i--) {
-        const isWin = trades[i].pnl > 0;
-        if (streakType === null) {
-          streakType = isWin ? 'win' : 'loss';
-          currentStreak = 1;
-        } else if ((streakType === 'win' && isWin) || (streakType === 'loss' && !isWin)) {
-          currentStreak++;
-        } else break;
-      }
+<div class="toast" id="toast"></div>
+<footer>TradeMind AI • Demo • Nie stanowi porady inwestycyjnej</footer>
 
-      // Score (0-100)
-      let score = 50;
-      score += Math.min(20, (winrate - 40));
-      score += Math.min(15, rr * 8);
-      if (totalPnl > 0) score += 10;
-      score = Math.max(15, Math.min(98, Math.round(score)));
+<script>
+let trades = JSON.parse(localStorage.getItem('tm_v3')||'[]');
+let selectedEmo = '';
 
-      scoreEl.textContent = score + '/100';
+document.querySelectorAll('.emo').forEach(el=>{
+  el.onclick=()=>{
+    document.querySelectorAll('.emo').forEach(e=>e.classList.remove('on'));
+    el.classList.add('on');
+    selectedEmo = el.dataset.e;
+  };
+});
 
-      // Main insight
-      let main = '';
-      if (winrate >= 60 && rr >= 1.2) {
-        main = `Świetna robota. Winrate ${winrate}% i solidny R:R 1:${rr.toFixed(1)}. Jesteś w dobrej strefie – trzymaj dyscyplinę.`;
-      } else if (winrate >= 55) {
-        main = `Winrate na poziomie ${winrate}% jest OK, ale R:R 1:${rr.toFixed(1)} można poprawić. Skup się na lepszym risk management.`;
-      } else if (winrate < 45) {
-        main = `Winrate ${winrate}% jest za niski. AI wykrywa, że za często wchodzisz w setupy niskiej jakości. Zwolnij i filtruj wejścia.`;
-      } else {
-        main = `Jesteś blisko równowagi (WR ${winrate}%). Małe poprawki w selekcji setupów mogą dać duży skok wyników.`;
-      }
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  if(id==='analytics') renderAnalytics();
+}
 
-      mainEl.textContent = main;
+function toast(m){
+  const t=document.getElementById('toast');
+  t.textContent=m;t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'),2300);
+}
 
-      // Tips
-      const tips = [];
+function openCheck(){document.getElementById('modal').classList.add('on')}
+function closeCheck(){document.getElementById('modal').classList.remove('on')}
 
-      if (currentStreak >= 3 && streakType === 'loss') {
-        tips.push({ icon: '🛑', text: `Masz serię ${currentStreak} strat z rzędu. Rozważ przerwę – revenge trading zabija konta.` });
-      }
-      if (currentStreak >= 3 && streakType === 'win') {
-        tips.push({ icon: '🔥', text: `Seria ${currentStreak} wygranych! Nie zwiększaj teraz wielkości pozycji – trzymaj ten sam risk.` });
-      }
+function addTrade(){
+  const symbol=(document.getElementById('sym').value.trim()||'UNKNOWN').toUpperCase();
+  const side=document.getElementById('side').value;
+  const pnl=parseFloat(document.getElementById('pnlin').value)||0;
+  const setup=document.getElementById('setup').value.trim();
+  trades.push({id:Date.now(),symbol,side,pnl,setup,emo:selectedEmo,date:new Date().toISOString()});
+  localStorage.setItem('tm_v3',JSON.stringify(trades));
+  selectedEmo='';
+  document.querySelectorAll('.emo').forEach(e=>e.classList.remove('on'));
+  document.getElementById('sym').value='';
+  document.getElementById('pnlin').value='';
+  document.getElementById('setup').value='';
+  toast('✓ Transakcja dodana');
+  render();
+}
 
-      if (longs.length >= 2 && shorts.length >= 2) {
-        if (longWinrate > shortWinrate + 15) {
-          tips.push({ icon: '📈', text: `Longi działają u Ciebie wyraźnie lepiej (WR ${longWinrate}% vs ${shortWinrate}%). Rozważ większy fokus na longi.` });
-        } else if (shortWinrate > longWinrate + 15) {
-          tips.push({ icon: '📉', text: `Shorty dają Ci lepsze wyniki (WR ${shortWinrate}% vs ${longWinrate}%). Wykorzystuj to.` });
-        }
-      }
+function render(){
+  const n=trades.length;
+  const wins=trades.filter(t=>t.pnl>0);
+  const losses=trades.filter(t=>t.pnl<0);
+  const wr=n?Math.round(wins.length/n*100):0;
+  const total=trades.reduce((s,t)=>s+t.pnl,0);
+  const avgW=wins.length?wins.reduce((s,t)=>s+t.pnl,0)/wins.length:0;
+  const avgL=losses.length?Math.abs(losses.reduce((s,t)=>s+t.pnl,0)/losses.length):0;
+  const rr=avgL?avgW/avgL:0;
 
-      if (rr < 1 && avgLoss > 0) {
-        tips.push({ icon: '⚖️', text: `Twój średni zysk (${avgWin.toFixed(0)}) jest mniejszy niż średnia strata (${avgLoss.toFixed(0)}). Celuj w minimum 1:1.5 R:R.` });
-      }
+  document.getElementById('wr').textContent=n?wr+'%':'—';
+  document.getElementById('cnt').textContent=n;
+  const pnlEl=document.getElementById('pnl');
+  pnlEl.textContent=(total>=0?'+':'')+total.toFixed(0);
+  pnlEl.className='stat-v '+(total>=0?'g':'r');
+  document.getElementById('rr').textContent=rr?('1:'+rr.toFixed(1)):'—';
 
-      if (n >= 5 && wins.length > 0) {
-        const best = wins.reduce((a, b) => a.pnl > b.pnl ? a : b);
-        tips.push({ icon: '💎', text: `Najlepszy trade: ${best.symbol} (+${best.pnl.toFixed(0)}). Przypomnij sobie, co wtedy zrobiłeś dobrze.` });
-      }
+  // level
+  const lvl=Math.min(10,1+Math.floor(n/5));
+  document.getElementById('level').textContent='Lvl '+lvl;
 
-      if (tips.length === 0) {
-        tips.push({ icon: '🧠', text: 'Kontynuuj konsekwentne logowanie. Im więcej danych, tym dokładniejsze wnioski AI.' });
-      }
+  // streak
+  let streak=0,type=null;
+  for(let i=n-1;i>=0;i--){
+    const w=trades[i].pnl>0;
+    if(type===null){type=w?'w':'l';streak=1}
+    else if((type==='w'&&w)||(type==='l'&&!w))streak++;
+    else break;
+  }
+  document.getElementById('streakN').textContent=(type==='w'?'+':'')+streak+(type==='l'?'↓':'↑');
+  document.getElementById('streakN').style.color=type==='w'?'var(--green)':type==='l'?'var(--red)':'var(--text)';
 
-      tipsEl.innerHTML = tips.map(t => `
-        <div class="ai-tip">
-          <div class="ai-tip-icon">${t.icon}</div>
-          <div>${t.text}</div>
+  const best=wins.length?Math.max(...wins.map(t=>t.pnl)):0;
+  document.getElementById('bestW').textContent=best?('+'+best.toFixed(0)):0;
+  document.getElementById('avg').textContent=n?(total/n).toFixed(1):0;
+
+  // AI
+  runAI(n,wr,rr,total,avgW,avgL,streak,type,wins,losses);
+
+  // list
+  const list=document.getElementById('list');
+  if(!n){list.innerHTML='<div class="empty">Brak transakcji.<br>Dodaj pierwszą w formularzu powyżej.</div>';}
+  else{
+    list.innerHTML=trades.slice().reverse().slice(0,30).map(t=>`
+      <div class="tc">
+        <div class="tt">
+          <div class="ts">${esc(t.symbol)}</div>
+          <div class="tg ${t.side==='long'?'L':'S'}">${t.side.toUpperCase()}</div>
         </div>
-      `).join('');
-    }
-
-    function render() {
-      const n = trades.length;
-      const wins = trades.filter(t => t.pnl > 0).length;
-      const winrate = n ? Math.round((wins / n) * 100) + '%' : '—';
-      const totalPnl = trades.reduce((s, t) => s + t.pnl, 0);
-
-      document.getElementById('winrate').textContent = winrate;
-      document.getElementById('tradeCount').textContent = n;
-
-      const pnlEl = document.getElementById('totalPnl');
-      pnlEl.textContent = (totalPnl >= 0 ? '+' : '') + totalPnl.toFixed(0);
-      pnlEl.className = 'hero-value ' + (totalPnl >= 0 ? 'green' : 'red');
-
-      runAIAnalysis();
-
-      const list = document.getElementById('tradesList');
-      if (n === 0) {
-        list.innerHTML = '<div class="empty-state">Brak transakcji.<br>Dodaj pierwszą i zobacz moc AI.</div>';
-        return;
-      }
-
-      list.innerHTML = trades.slice().reverse().slice(0, 20).map(t => `
-        <div class="trade-card">
-          <div class="trade-top">
-            <div class="trade-symbol">${escapeHtml(t.symbol)}</div>
-            <div class="side-tag ${t.side}">${t.side.toUpperCase()}</div>
-          </div>
-          <div class="trade-bottom">
-            <span>${formatDate(t.date)}${t.setup ? ' · ' + escapeHtml(t.setup) : ''}</span>
-            <span class="pnl ${t.pnl >= 0 ? 'pos' : 'neg'}">${t.pnl >= 0 ? '+' : ''}${t.pnl.toFixed(1)}</span>
-          </div>
+        <div class="tb">
+          <span>${fmt(t.date)}${t.setup?' · '+esc(t.setup):''}${t.emo?' <span class="emo-tag">'+t.emo+'</span>':''}</span>
+          <span class="pnl ${t.pnl>=0?'g':'r'}">${t.pnl>=0?'+':''}${t.pnl.toFixed(1)}</span>
         </div>
-      `).join('');
-    }
+      </div>`).join('');
+  }
 
-    function addTrade() {
-      const symbol = (document.getElementById('symbol').value.trim() || 'UNKNOWN').toUpperCase();
-      const side = document.getElementById('side').value;
-      const pnl = parseFloat(document.getElementById('pnl').value) || 0;
-      const setup = document.getElementById('setup').value.trim();
+  drawEquity();
+}
 
-      trades.push({
-        id: Date.now(),
-        symbol,
-        side,
-        pnl,
-        setup,
-        date: new Date().toISOString()
-      });
+function runAI(n,wr,rr,total,avgW,avgL,streak,type,wins,losses){
+  const main=document.getElementById('aiMain');
+  const tips=document.getElementById('aiTips');
+  const scoreEl=document.getElementById('score');
 
-      save();
-      showToast('✓ Transakcja dodana');
+  if(n<3){
+    main.textContent=`Masz ${n} transakcje. Dodaj jeszcze ${3-n}, żeby odblokować pełną analizę.`;
+    tips.innerHTML='';scoreEl.textContent='—';return;
+  }
 
-      document.getElementById('symbol').value = '';
-      document.getElementById('pnl').value = '';
-      document.getElementById('setup').value = '';
-    }
+  let score=45;
+  score+=Math.min(25,wr-35);
+  score+=Math.min(15,rr*7);
+  if(total>0)score+=8;
+  score=Math.max(12,Math.min(97,Math.round(score)));
+  scoreEl.textContent=score+'/100';
 
-    // Voice
-    let recognition = null;
-    let isListening = false;
+  let msg='';
+  if(wr>=60&&rr>=1.3)msg=`Bardzo dobry trading. WR ${wr}% + R:R 1:${rr.toFixed(1)}. Trzymaj ten poziom dyscypliny.`;
+  else if(wr>=55)msg=`WR ${wr}% jest solidny. Popraw R:R (teraz 1:${rr.toFixed(1)}) – celuj w minimum 1:1.5.`;
+  else if(wr<45)msg=`WR ${wr}% jest za niski. AI widzi zbyt dużo niskiej jakości wejść. Zwolnij i filtruj setupy.`;
+  else msg=`Jesteś blisko balansu (WR ${wr}%). Kilka lepszych decyzji może mocno podnieść wynik.`;
+  main.textContent=msg;
 
-    function initSpeech() {
-      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SR) {
-        document.getElementById('status').textContent = 'Mikrofon niedostępny';
-        return false;
-      }
-      recognition = new SR();
-      recognition.lang = 'pl-PL';
-      recognition.continuous = false;
-      recognition.interimResults = true;
+  const t=[];
+  if(streak>=3&&type==='l')t.push({i:'🛑',x:`Seria ${streak} strat. Zrób przerwę – revenge trading zabija konta.`});
+  if(streak>=3&&type==='w')t.push({i:'🔥',x:`Seria ${streak} wygranych! Nie zwiększaj teraz risku – trzymaj ten sam % .`});
+  if(rr<1&&avgL>0)t.push({i:'⚖️',x:`Śr. zysk ${avgW.toFixed(0)} < śr. strata ${avgL.toFixed(0)}. Pracuj nad R:R.`});
+  if(wins.length){const b=wins.reduce((a,c)=>a.pnl>c.pnl?a:c);t.push({i:'💎',x:`Najlepszy trade: ${b.symbol} (+${b.pnl.toFixed(0)}). Przypomnij sobie ten setup.`})}
+  if(t.length===0)t.push({i:'🧠',x:'Kontynuuj konsekwentne logowanie. AI uczy się Twojego stylu.'});
 
-      recognition.onstart = () => {
-        isListening = true;
-        document.getElementById('micBtn').classList.add('listening');
-        document.getElementById('status').textContent = 'Słucham...';
-      };
+  tips.innerHTML=t.map(x=>`<div class="tip"><i>${x.i}</i><div>${x.x}</div></div>`).join('');
+}
 
-      recognition.onresult = (e) => {
-        let text = '';
-        for (let i = e.resultIndex; i < e.results.length; i++) text += e.results[i][0].transcript;
-        document.getElementById('transcript').textContent = text;
+function drawEquity(){
+  const c=document.getElementById('equity');
+  const ctx=c.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  c.width=c.offsetWidth*dpr;c.height=120*dpr;
+  ctx.scale(dpr,dpr);
+  const w=c.offsetWidth,h=120;
+  ctx.clearRect(0,0,w,h);
 
-        if (e.results[e.results.length - 1].isFinal) {
-          parseVoice(text);
-        }
-      };
+  if(trades.length<2){
+    ctx.fillStyle='#8b8b9f';ctx.font='12px system-ui';ctx.textAlign='center';
+    ctx.fillText('Dodaj więcej transakcji',w/2,h/2);return;
+  }
 
-      recognition.onerror = () => {
-        stopListening();
-        document.getElementById('status').textContent = 'Spróbuj ponownie';
-      };
+  let eq=0;const points=[{x:0,y:0}];
+  trades.forEach(t=>{eq+=t.pnl;points.push({x:points.length,y:eq})});
+  const minY=Math.min(...points.map(p=>p.y));
+  const maxY=Math.max(...points.map(p=>p.y));
+  const range=maxY-minY||1;
 
-      recognition.onend = () => stopListening();
-      return true;
-    }
+  ctx.beginPath();
+  points.forEach((p,i)=>{
+    const x=(p.x/(points.length-1))*w;
+    const y=h-15-((p.y-minY)/range)*(h-30);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle='#00f0ff';ctx.lineWidth=2.5;ctx.lineJoin='round';ctx.stroke();
 
-    function parseVoice(text) {
-      const lower = text.toLowerCase();
-      let side = (lower.includes('short') || lower.includes('sprzeda')) ? 'short' : 'long';
+  // fill
+  ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.closePath();
+  const grad=ctx.createLinearGradient(0,0,0,h);
+  grad.addColorStop(0,'rgba(0,240,255,.2)');grad.addColorStop(1,'rgba(0,240,255,0)');
+  ctx.fillStyle=grad;ctx.fill();
+}
 
-      const known = ['eurusd','gbpusd','usdjpy','xauusd','gold','btc','eth','nasdaq','us30','ger40'];
-      let symbol = 'VOICE';
-      for (const s of known) {
-        if (lower.includes(s)) { symbol = s.toUpperCase(); break; }
-      }
+function renderAnalytics(){
+  const n=trades.length;
+  const longs=trades.filter(t=>t.side==='long');
+  const shorts=trades.filter(t=>t.side==='short');
+  const lwr=longs.length?Math.round(longs.filter(t=>t.pnl>0).length/longs.length*100):0;
+  const swr=shorts.length?Math.round(shorts.filter(t=>t.pnl>0).length/shorts.length*100):0;
+  const wins=trades.filter(t=>t.pnl>0);
+  const losses=trades.filter(t=>t.pnl<0);
+  const aw=wins.length?wins.reduce((s,t)=>s+t.pnl,0)/wins.length:0;
+  const al=losses.length?Math.abs(losses.reduce((s,t)=>s+t.pnl,0)/losses.length):0;
 
-      let pnl = 0;
-      const m = lower.match(/([+-]?\d+[.,]?\d*)/);
-      if (m) {
-        pnl = parseFloat(m[1].replace(',', '.'));
-        if (lower.includes('straci') || lower.includes('minus') || lower.includes('strat')) pnl = -Math.abs(pnl);
-      }
+  document.getElementById('lwr').textContent=longs.length?lwr+'%':'—';
+  document.getElementById('swr').textContent=shorts.length?swr+'%':'—';
+  document.getElementById('aw').textContent=aw?('+'+aw.toFixed(1)):'—';
+  document.getElementById('al').textContent=al?('-'+al.toFixed(1)):'—';
 
-      trades.push({
-        id: Date.now(),
-        symbol,
-        side,
-        pnl,
-        setup: '',
-        date: new Date().toISOString()
-      });
+  let deep='';
+  if(n<5)deep='Potrzebujesz minimum 5 transakcji do głębokiej analizy.';
+  else{
+    deep=`Longi: WR ${lwr}% (${longs.length} trade'ów). Shorty: WR ${swr}% (${shorts.length}). `;
+    if(lwr>swr+12)deep+='Longi działają u Ciebie wyraźnie lepiej.';
+    else if(swr>lwr+12)deep+='Shorty dają Ci lepsze wyniki – wykorzystuj to.';
+    else deep+='Wyniki long/short są zbliżone.';
+  }
+  document.getElementById('deepAI').textContent=deep;
 
-      save();
-      showToast('✓ Dodano z głosu');
-    }
+  // emotions
+  const emoMap={};
+  trades.forEach(t=>{if(t.emo)emoMap[t.emo]=(emoMap[t.emo]||0)+1});
+  const emoEl=document.getElementById('emoStats');
+  const emos=Object.entries(emoMap).sort((a,b)=>b[1]-a[1]);
+  if(!emos.length)emoEl.innerHTML='<div class="empty" style="padding:20px">Brak otagowanych emocji</div>';
+  else emoEl.innerHTML=emos.map(([e,c])=>`<div class="tc" style="margin-bottom:6px"><div class="tt"><span>${e}</span><span style="color:var(--cyan);font-weight:800">${c}×</span></div></div>`).join('');
 
-    function toggleListening() {
-      if (!recognition && !initSpeech()) return;
-      if (isListening) recognition.stop();
-      else {
-        document.getElementById('transcript').textContent = '';
-        try { recognition.start(); } catch(e) {}
-      }
-    }
+  // simple wr chart
+  const c=document.getElementById('wrChart');
+  const ctx=c.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  c.width=c.offsetWidth*dpr;c.height=100*dpr;ctx.scale(dpr,dpr);
+  const w=c.offsetWidth,h=100;
+  ctx.clearRect(0,0,w,h);
+  if(n<4){ctx.fillStyle='#8b8b9f';ctx.font='12px system-ui';ctx.textAlign='center';ctx.fillText('Za mało danych',w/2,h/2);return;}
 
-    function stopListening() {
-      isListening = false;
-      document.getElementById('micBtn').classList.remove('listening');
-      document.getElementById('status').textContent = 'Powiedz wynik transakcji';
-    }
+  const step=Math.max(1,Math.floor(n/8));
+  const pts=[];
+  for(let i=step;i<=n;i+=step){
+    const slice=trades.slice(0,i);
+    const wr=Math.round(slice.filter(t=>t.pnl>0).length/slice.length*100);
+    pts.push(wr);
+  }
+  ctx.beginPath();
+  pts.forEach((v,i)=>{
+    const x=(i/(pts.length-1||1))*w;
+    const y=h-10-(v/100)*(h-20);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle='#c084fc';ctx.lineWidth=2.5;ctx.stroke();
+}
 
-    initSpeech();
-    render();
-  </script>
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function fmt(iso){return new Date(iso).toLocaleString('pl-PL',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}
+
+// voice
+let rec=null,listening=false;
+function initMic(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){document.getElementById('vSt').textContent='Mikrofon niedostępny';return false;}
+  rec=new SR();rec.lang='pl-PL';rec.continuous=false;rec.interimResults=true;
+  rec.onstart=()=>{listening=true;document.getElementById('mic').classList.add('rec');document.getElementById('vSt').textContent='Słucham...'};
+  rec.onresult=e=>{let t='';for(let i=e.resultIndex;i<e.results.length;i++)t+=e.results[i][0].transcript;document.getElementById('vTr').textContent=t;if(e.results[e.results.length-1].isFinal)parseVoice(t)};
+  rec.onerror=()=>{stopMic();document.getElementById('vSt').textContent='Spróbuj ponownie'};
+  rec.onend=()=>stopMic();return true;
+}
+function parseVoice(text){
+  const l=text.toLowerCase();
+  let side=l.includes('short')||l.includes('sprzeda')?'short':'long';
+  const known=['eurusd','gbpusd','usdjpy','xauusd','gold','btc','eth','nasdaq','us30'];
+  let symbol='VOICE';
+  for(const s of known)if(l.includes(s)){symbol=s.toUpperCase();break;}
+  let pnl=0;const m=l.match(/([+-]?\d+[.,]?\d*)/);
+  if(m){pnl=parseFloat(m[1].replace(',','.'));if(l.includes('straci')||l.includes('minus')||l.includes('strat'))pnl=-Math.abs(pnl);}
+  trades.push({id:Date.now(),symbol,side,pnl,setup:'',emo:'',date:new Date().toISOString()});
+  localStorage.setItem('tm_v3',JSON.stringify(trades));
+  toast('✓ Dodano z głosu');render();
+}
+function toggleMic(){
+  if(!rec&&!initMic())return;
+  if(listening)rec.stop();
+  else{document.getElementById('vTr').textContent='';try{rec.start()}catch(e){}}
+}
+function stopMic(){listening=false;document.getElementById('mic').classList.remove('rec');document.getElementById('vSt').textContent='Powiedz wynik transakcji'}
+
+initMic();render();
+</script>
 </body>
 </html>
