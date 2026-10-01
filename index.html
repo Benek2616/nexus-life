@@ -5,57 +5,404 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#0f0f13" />
   <title>Nexus Life</title>
   <style>
     :root {
-      --primary: #1a73e8;
-      --bg: #f8f9fa;
-      --card: #ffffff;
-      --text: #202124;
-      --text-secondary: #5f6368;
-      --danger: #ea4335;
+      --bg: #0f0f13;
+      --surface: #1a1a22;
+      --surface-2: #242430;
+      --primary: #6c5ce7;
+      --primary-glow: rgba(108, 92, 231, 0.45);
+      --accent: #00cec9;
+      --text: #f5f5f7;
+      --text-secondary: #a0a0b0;
+      --danger: #ff6b6b;
+      --success: #00b894;
+      --orange: #fdcb6e;
+      --radius: 20px;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 100px; }
-    .header { background: var(--card); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-    .header h1 { font-size: 20px; font-weight: 600; }
-    .content { padding: 20px; max-width: 480px; margin: 0 auto; }
-    .section-title { font-size: 28px; font-weight: 700; margin-bottom: 16px; }
-    .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 32px; }
-    .card { background: var(--card); border-radius: 16px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-    .card.orange { background: #fff8e1; }
-    .card.green { background: #e8f5e9; }
-    .card-icon { font-size: 22px; margin-bottom: 8px; }
-    .card-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
-    .card-value { font-size: 22px; font-weight: 700; }
-    .voice-section { text-align: center; margin: 40px 0; }
-    .mic-button { width: 90px; height: 90px; border-radius: 50%; border: none; background: var(--primary); color: white; font-size: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; transition: all 0.2s ease; box-shadow: 0 4px 14px rgba(26, 115, 232, 0.4); }
-    .mic-button.listening { background: var(--danger); transform: scale(1.1); box-shadow: 0 4px 20px rgba(234, 67, 53, 0.5); animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(234, 67, 53, 0.5); } 70% { box-shadow: 0 0 0 20px rgba(234, 67, 53, 0); } 100% { box-shadow: 0 0 0 0 rgba(234, 67, 53, 0); } }
-    .status { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
-    .transcript { font-size: 14px; color: var(--text-secondary); min-height: 20px; max-width: 280px; margin: 0 auto; }
-    .expenses-list { margin-top: 24px; }
-    .expense-item { background: var(--card); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-    .expense-title { font-weight: 500; font-size: 15px; }
-    .expense-date { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
-    .expense-amount { font-weight: 700; font-size: 16px; color: var(--danger); }
-    .empty { text-align: center; color: var(--text-secondary); padding: 30px 0; font-size: 15px; }
-    .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #323232; color: white; padding: 12px 24px; border-radius: 30px; font-size: 14px; opacity: 0; transition: all 0.3s ease; z-index: 1000; white-space: nowrap; }
-    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    .manual-add { margin-top: 20px; display: flex; gap: 8px; }
-    .manual-add input { flex: 1; padding: 12px 14px; border: 1px solid #dadce0; border-radius: 10px; font-size: 15px; outline: none; }
-    .manual-add input:focus { border-color: var(--primary); }
-    .manual-add button { padding: 0 18px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
-    footer { text-align: center; padding: 20px; font-size: 12px; color: var(--text-secondary); }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 40px;
+      background-image: 
+        radial-gradient(ellipse at top, rgba(108, 92, 231, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(0, 206, 201, 0.08) 0%, transparent 40%);
+    }
+
+    /* Header */
+    .header {
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(15, 15, 19, 0.75);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #6c5ce7, #00cec9);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .logo h1 {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(108, 92, 231, 0.2);
+      color: #a29bfe;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* Content */
+    .content {
+      padding: 24px 20px;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .greeting {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .section-title {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      margin-bottom: 24px;
+      background: linear-gradient(90deg, #fff, #c0c0d0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Cards */
+    .cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 36px;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .card.orange::before { background: linear-gradient(90deg, #fdcb6e, #e17055); }
+    .card.green::before { background: linear-gradient(90deg, #00b894, #00cec9); }
+
+    .card-icon {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .card-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .card-value {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    /* Voice Section */
+    .voice-section {
+      text-align: center;
+      margin: 48px 0 36px;
+    }
+
+    .mic-wrapper {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 20px;
+    }
+
+    .mic-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      background: linear-gradient(var(--bg), var(--bg)) padding-box,
+                  linear-gradient(135deg, #6c5ce7, #00cec9) border-box;
+      opacity: 0.4;
+      transition: all 0.3s ease;
+    }
+
+    .mic-button {
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(145deg, #6c5ce7, #5a4bd1);
+      color: white;
+      font-size: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 8px 32px var(--primary-glow);
+    }
+
+    .mic-button:active {
+      transform: scale(0.95);
+    }
+
+    .mic-button.listening {
+      background: linear-gradient(145deg, #ff6b6b, #ee5253);
+      box-shadow: 0 8px 32px rgba(255, 107, 107, 0.5);
+      animation: pulse-glow 1.6s ease-in-out infinite;
+    }
+
+    .mic-button.listening + .mic-ring,
+    .mic-wrapper:has(.listening) .mic-ring {
+      animation: spin-ring 3s linear infinite;
+      opacity: 1;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(255, 107, 107, 0.5); }
+      50% { transform: scale(1.06); box-shadow: 0 12px 40px rgba(255, 107, 107, 0.7); }
+    }
+
+    @keyframes spin-ring {
+      to { transform: rotate(360deg); }
+    }
+
+    .status {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.2px;
+    }
+
+    .transcript {
+      font-size: 14px;
+      color: var(--text-secondary);
+      min-height: 22px;
+      max-width: 300px;
+      margin: 0 auto;
+      line-height: 1.4;
+    }
+
+    /* Manual input */
+    .manual-add {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+
+    .manual-add input {
+      flex: 1;
+      padding: 16px 18px;
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      font-size: 15px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .manual-add input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .manual-add input:focus {
+      border-color: var(--primary);
+    }
+
+    .manual-add button {
+      padding: 0 22px;
+      background: linear-gradient(135deg, #6c5ce7, #5a4bd1);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 16px var(--primary-glow);
+    }
+
+    .manual-add button:active {
+      transform: scale(0.97);
+    }
+
+    /* Expenses list */
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .list-header h3 {
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .expense-item {
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid rgba(255,255,255,0.05);
+      animation: fadeIn 0.35s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .expense-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .expense-icon {
+      width: 42px;
+      height: 42px;
+      background: rgba(108, 92, 231, 0.15);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .expense-title {
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+
+    .expense-date {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .expense-amount {
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--danger);
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--text-secondary);
+      padding: 40px 20px;
+      font-size: 15px;
+      line-height: 1.5;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px dashed rgba(255,255,255,0.1);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: linear-gradient(135deg, #2d2d3a, #1e1e28);
+      color: white;
+      padding: 14px 28px;
+      border-radius: 40px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1000;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.08);
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    footer {
+      text-align: center;
+      padding: 28px 20px 10px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
   </style>
 </head>
 <body>
   <div class="header">
-    <h1>Nexus Life</h1>
-    <span style="font-size: 13px; color: #5f6368;">Demo Web</span>
+    <div class="logo">
+      <div class="logo-icon">✨</div>
+      <h1>Nexus Life</h1>
+    </div>
+    <span class="badge">DEMO</span>
   </div>
 
   <div class="content">
+    <div class="greeting" id="greeting">Cześć 👋</div>
     <div class="section-title">Dziś</div>
 
     <div class="cards">
@@ -72,28 +419,36 @@
     </div>
 
     <div class="voice-section">
-      <button class="mic-button" id="micBtn" onclick="toggleListening()">🎤</button>
-      <div class="status" id="status">Dotknij mikrofonu i mów</div>
+      <div class="mic-wrapper">
+        <div class="mic-ring"></div>
+        <button class="mic-button" id="micBtn" onclick="toggleListening()">🎤</button>
+      </div>
+      <div class="status" id="status">Dotknij i mów</div>
       <div class="transcript" id="transcript"></div>
     </div>
 
     <div class="manual-add">
-      <input type="text" id="manualInput" placeholder="Np. kawa 18 zł" />
-      <button onclick="addManual()">Dodaj</button>
+      <input type="text" id="manualInput" placeholder="np. kawa 18 zł" />
+      <button onclick="addManual()">+</button>
     </div>
 
-    <div class="expenses-list">
-      <h3 style="margin-bottom: 12px; font-size: 17px;">Ostatnie wydatki</h3>
-      <div id="expensesList">
-        <div class="empty">Brak wydatków. Powiedz np. „wydałem 25 zł na lunch”</div>
-      </div>
+    <div class="list-header">
+      <h3>Ostatnie wydatki</h3>
+    </div>
+    <div id="expensesList">
+      <div class="empty">Brak wydatków.<br>Powiedz „wydałem 25 zł na lunch”</div>
     </div>
   </div>
 
   <div class="toast" id="toast"></div>
-  <footer>Nexus Life • Wersja demo web • Dane tylko w tej przeglądarce</footer>
+  <footer>Nexus Life • Dane tylko na tym urządzeniu</footer>
 
   <script>
+    // Greeting based on time
+    const hour = new Date().getHours();
+    const greetings = hour < 12 ? 'Dzień dobry ☀️' : hour < 18 ? 'Cześć 👋' : 'Dobry wieczór 🌙';
+    document.getElementById('greeting').textContent = greetings;
+
     let expenses = JSON.parse(localStorage.getItem('nexus_expenses') || '[]');
 
     function save() {
@@ -103,24 +458,32 @@
 
     function getTodayTotal() {
       const today = new Date().toDateString();
-      return expenses.filter(e => new Date(e.date).toDateString() === today).reduce((sum, e) => sum + e.amount, 0);
+      return expenses
+        .filter(e => new Date(e.date).toDateString() === today)
+        .reduce((sum, e) => sum + e.amount, 0);
     }
 
     function render() {
       document.getElementById('totalExpenses').textContent = getTodayTotal().toFixed(0) + ' zł';
+
       const list = document.getElementById('expensesList');
       if (expenses.length === 0) {
-        list.innerHTML = '<div class="empty">Brak wydatków. Powiedz np. „wydałem 25 zł na lunch”</div>';
+        list.innerHTML = '<div class="empty">Brak wydatków.<br>Powiedz „wydałem 25 zł na lunch”</div>';
         return;
       }
-      list.innerHTML = expenses.slice().reverse().slice(0, 15).map(e => `
+
+      list.innerHTML = expenses.slice().reverse().slice(0, 12).map(e => `
         <div class="expense-item">
-          <div>
-            <div class="expense-title">${escapeHtml(e.title)}</div>
-            <div class="expense-date">${formatDate(e.date)}</div>
+          <div class="expense-left">
+            <div class="expense-icon">💳</div>
+            <div>
+              <div class="expense-title">${escapeHtml(e.title)}</div>
+              <div class="expense-date">${formatDate(e.date)}</div>
+            </div>
           </div>
           <div class="expense-amount">-${e.amount.toFixed(2)} zł</div>
-        </div>`).join('');
+        </div>
+      `).join('');
     }
 
     function escapeHtml(text) {
@@ -130,14 +493,16 @@
     }
 
     function formatDate(iso) {
-      return new Date(iso).toLocaleString('pl-PL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+      return new Date(iso).toLocaleString('pl-PL', {
+        day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+      });
     }
 
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
       t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2500);
+      setTimeout(() => t.classList.remove('show'), 2600);
     }
 
     function parseCommand(text) {
@@ -145,16 +510,21 @@
       const amountMatch = lower.match(/(\d+[.,]?\d*)\s*(zł|zl|pln|zlotych)?/);
       if (amountMatch) {
         const amount = parseFloat(amountMatch[1].replace(',', '.'));
-        if (amount > 0) return { type: 'expense', amount, title: text };
+        if (amount > 0) return { amount, title: text };
       }
-      if (lower.length > 2) return { type: 'expense', amount: 0, title: text };
+      if (lower.length > 2) return { amount: 0, title: text };
       return null;
     }
 
     function addExpense(title, amount) {
-      expenses.push({ id: Date.now(), title: title || 'Wydatek', amount: amount || 0, date: new Date().toISOString() });
+      expenses.push({
+        id: Date.now(),
+        title: title || 'Wydatek',
+        amount: amount || 0,
+        date: new Date().toISOString()
+      });
       save();
-      showToast(amount > 0 ? `Dodano ${amount.toFixed(2)} zł` : 'Dodano wpis');
+      showToast(amount > 0 ? `✓ Dodano ${amount.toFixed(2)} zł` : '✓ Zapisano');
     }
 
     function addManual() {
@@ -166,17 +536,21 @@
       input.value = '';
     }
 
-    document.getElementById('manualInput').addEventListener('keydown', e => { if (e.key === 'Enter') addManual(); });
+    document.getElementById('manualInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') addManual();
+    });
 
+    // Speech
     let recognition = null;
     let isListening = false;
 
     function initSpeech() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
-        document.getElementById('status').textContent = 'Rozpoznawanie mowy niedostępne';
+        document.getElementById('status').textContent = 'Mikrofon niedostępny';
         return false;
       }
+
       recognition = new SpeechRecognition();
       recognition.lang = 'pl-PL';
       recognition.continuous = false;
@@ -185,7 +559,7 @@
       recognition.onstart = () => {
         isListening = true;
         document.getElementById('micBtn').classList.add('listening');
-        document.getElementById('status').textContent = 'Słucham... mów teraz';
+        document.getElementById('status').textContent = 'Słucham...';
       };
 
       recognition.onresult = (event) => {
@@ -194,15 +568,17 @@
           transcript += event.results[i][0].transcript;
         }
         document.getElementById('transcript').textContent = transcript;
+
         if (event.results[event.results.length - 1].isFinal) {
           const parsed = parseCommand(transcript);
           if (parsed) addExpense(parsed.title, parsed.amount);
         }
       };
 
-      recognition.onerror = (event) => {
+      recognition.onerror = (e) => {
         stopListening();
-        document.getElementById('status').textContent = event.error === 'not-allowed' ? 'Brak dostępu do mikrofonu' : 'Błąd rozpoznawania';
+        document.getElementById('status').textContent =
+          e.error === 'not-allowed' ? 'Brak dostępu do mikrofonu' : 'Spróbuj ponownie';
       };
 
       recognition.onend = () => stopListening();
@@ -211,6 +587,7 @@
 
     function toggleListening() {
       if (!recognition && !initSpeech()) return;
+
       if (isListening) {
         recognition.stop();
       } else {
@@ -222,7 +599,7 @@
     function stopListening() {
       isListening = false;
       document.getElementById('micBtn').classList.remove('listening');
-      document.getElementById('status').textContent = 'Dotknij mikrofonu i mów';
+      document.getElementById('status').textContent = 'Dotknij i mów';
     }
 
     initSpeech();
