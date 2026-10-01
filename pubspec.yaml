@@ -1,0 +1,31 @@
+name: nexus_life
+description: Prywatny, offline-first asystent AI organizujący cyfrowe życie użytkownika.
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: '>=3.5.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  flutter_riverpod: ^2.6.1
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  path_provider: ^2.1.5
+  permission_handler: ^11.3.1
+  speech_to_text: ^7.0.0
+  google_mlkit_text_recognition: ^0.14.0
+  intl: ^0.19.0
+  uuid: ^4.5.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  isar_generator: ^3.1.0+1
+  build_runner: ^2.4.13
+
+flutter:
+  uses-material-design: true
