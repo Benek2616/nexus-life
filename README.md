@@ -2,7 +2,8 @@
 
 **Prywatny, offline-first asystent AI do organizowania cyfrowego życia**
 
-Nexus Life to aplikacja Android (docelowo iOS), która działa jako osobisty system operacyjny życia użytkownika. Wszystkie dane pozostają na urządzeniu. AI działa lokalnie (on-device).
+Nexus Life to aplikacja **Flutter** działająca na **iOS i Android**.  
+Wszystkie dane pozostają na urządzeniu. AI działa lokalnie (on-device).
 
 ## Główna idea
 
@@ -13,43 +14,66 @@ Nexus Life to aplikacja Android (docelowo iOS), która działa jako osobisty sys
 
 ## Status projektu
 
-🚀 **MVP w budowie** (październik 2026)
+🚀 **MVP w budowie** (październik 2026)  
+**Cel główny: iPhone (iOS)**
 
-Aktualny stack planowany:
-- **Flutter** (Android first, później iOS)
-- Lokalna baza: **Isar** lub **Drift**
-- On-device AI: Gemini Nano / MediaPipe / lokalne modele (Llama / Gemma)
-- Voice: Android SpeechRecognizer + lokalne NLP
-- UI: Material 3 + custom dashboard
+### Stack
+- **Flutter** (iOS first + Android)
+- Lokalna baza: **Isar**
+- Voice: `speech_to_text` (działa na iOS i Android)
+- UI: Material 3
 
-## Roadmapa MVP (v0.1)
+## Jak uruchomić na iPhone
 
-- [ ] Podstawowy voice → struktura (wydatki + wydarzenia)
-- [ ] Lokalna baza danych + backup/export
-- [ ] Prosty dashboard (dziś)
-- [ ] Skaner paragonów (OCR lokalny)
-- [ ] System nawyków
-- [ ] Tryb offline 100%
+### Wymagania
+- Mac z Xcode (najnowszy)
+- Flutter SDK
+- Apple Developer Account (darmowy wystarczy do testowania na własnym iPhonie)
 
-## Dlaczego to może być hit?
-
-1. Ludzie mają chaos z wieloma AI i aplikacjami
-2. Android ma słabą średnią jakość aplikacji (crashe, utrata danych)
-3. Prywatność staje się kluczowym argumentem sprzedażowym
-4. Subskrypcja 19–39 zł/mies. ma bardzo dobry potencjał
-
-## Jak uruchomić (wkrótce)
+### Kroki
 
 ```bash
+# 1. Sklonuj projekt
 git clone https://github.com/Benek2616/nexus-life.git
 cd nexus-life
+
+# 2. Utwórz foldery platform (jeśli ich jeszcze nie ma)
+flutter create . --platforms=ios,android
+
+# 3. Zainstaluj zależności
 flutter pub get
+
+# 4. Wygeneruj kod Isar
+flutter pub run build_runner build --delete-conflicting-outputs
+
+# 5. Podłącz iPhone kablem i zaufaj komputerowi
+
+# 6. Uruchom na iPhonie
 flutter run
 ```
 
-## Licencja
+### Uprawnienia iOS (Info.plist)
+Po `flutter create` dodaj w pliku `ios/Runner/Info.plist`:
 
-MIT (na razie)
+```xml
+<key>NSMicrophoneUsageDescription</key>
+<string>Aplikacja potrzebuje mikrofonu do rozpoznawania mowy</string>
+<key>NSSpeechRecognitionUsageDescription</key>
+<string>Aplikacja używa rozpoznawania mowy, żeby zapisywać wydatki i notatki głosem</string>
+```
+
+## Roadmapa MVP (v0.1)
+
+- [x] Struktura Flutter + modele
+- [x] Lokalna baza Isar
+- [x] VoiceService (polski)
+- [x] Dashboard + zapisywanie wydatków głosem
+- [ ] Pełna konfiguracja iOS (Info.plist + uprawnienia)
+- [ ] Lista wydatków i nawyków
+- [ ] Lepsze rozpoznawanie intencji
+
+## Link do repozytorium
+https://github.com/Benek2616/nexus-life
 
 ---
 
